@@ -8,5 +8,3 @@ export const pool = new Pool({
     password: 'password',
     port: 5434 
 });
-
-
