@@ -9,7 +9,7 @@ export default (sequelize) => {
      */
     static associate({Customization}) {
       // define association here
-      this.hasMany(Customization,{foreignKey:'decoration_id'})
+      this.hasMany(Customization,{foreignKey:'id'})
     }
   }
   Decoration.init({

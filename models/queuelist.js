@@ -15,7 +15,8 @@ export default (sequelize) => {
   }
   QueueList.init({
     customer_id: {
-      type:DataTypes.UUID
+      type:DataTypes.UUID,
+      primaryKey:true
     },
     queue_number:{
       type:DataTypes.INTEGER

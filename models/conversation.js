@@ -9,14 +9,14 @@ export default (sequelize) => {
      */
     static associate({UserOperationConnection}) {
       // define association here
-      this.belongsTo(UserOperationConnection,{foreignKey:'id'})
+      this.hasOne(UserOperationConnection,{foreignKey:'connect_id'})
     }
   }
   Conversation.init({
-    id: {
+    connection_id: {
       type:DataTypes.UUID,
-      primaryKey:true,
-      defaultValue:DataTypes.UUIDV4
+      // primaryKey:true,
+      // defaultValue:DataTyp
     },
     message:{
       type:DataTypes.TEXT

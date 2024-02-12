@@ -1,4 +1,4 @@
-import { pool } from "../db.js";
+
 
 export const getproduct = (req, res) => {
     const queryText = `SELECT * FROM products`;

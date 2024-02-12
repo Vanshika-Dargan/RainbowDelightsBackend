@@ -11,9 +11,9 @@ export default (sequelize) => {
     static associate({Products,Size,Topping,Decoration}) {
       // define association here
       this.belongsTo(Products,{foreignKey:'product_id'})
-      this.belongsTo(Size,{foreignKey:'size_id'})
-      this.belongsTo(Topping,{foreignKey:'topping_id'})
-      this.belongsTo(Decoration,{foreignKey:'decoration_id'})
+      this.belongsTo(Size,{foreignKey:'id'})
+      this.belongsTo(Topping,{foreignKey:'id'})
+      this.belongsTo(Decoration,{foreignKey:'id'})
     }
   }
   Customization.init({

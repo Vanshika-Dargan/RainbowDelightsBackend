@@ -10,7 +10,7 @@ export default (sequelize) => {
     static associate({QueueList,Conversation}) {
       // define association here
       this.belongsTo(QueueList,{foreignKey:'customer_id'})
-      this.hasOne(Conversation,{foreignKey:'connecton_id'})
+      this.belongsTo(Conversation,{foreignKey:'connecton_id'})
     }
   }
   UserOperationConnection.init({
