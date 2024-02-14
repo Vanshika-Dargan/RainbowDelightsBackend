@@ -1,8 +1,9 @@
-import express from 'express'
-import productRoutes from './routes/routes.js'
-import db from './models/index.js';
-import { config } from 'dotenv';
-import authRouter from './routes/auth.js';
+const express = require('express');
+const productRoutes = require('./routes/routes.js');
+const db = require('./models/index.js');
+const { config } = require('dotenv');
+const authRouter = require('./routes/auth.js');
+
 config();
 
 const app=express();

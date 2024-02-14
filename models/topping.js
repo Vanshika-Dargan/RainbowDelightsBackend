@@ -1,6 +1,7 @@
-import { Model, DataTypes } from 'sequelize';
+'use strict';
+const { Model } = require('sequelize');
 
-export default (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   class Topping extends Model {
     /**
      * Helper method for defining associations.

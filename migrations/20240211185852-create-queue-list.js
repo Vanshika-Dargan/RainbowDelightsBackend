@@ -2,15 +2,13 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('QueueLists', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    await queryInterface.createTable('queueList', {
       customer_id: {
-        type: Sequelize.UUID
+        type:Sequelize.DataTypes.UUID,
+        primaryKey:true
+      },
+      queue_number:{
+        type:Sequelize.DataTypes.INTEGER
       },
       createdAt: {
         allowNull: false,
@@ -23,6 +21,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('QueueLists');
+    await queryInterface.dropTable('queueList');
   }
 };

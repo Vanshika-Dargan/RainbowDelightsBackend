@@ -2,15 +2,18 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('UserOperationConnections', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
-      },
+    await queryInterface.createTable('userOperationConnection', {
       customer_id: {
-        type: Sequelize.UUID
+        type:Sequelize.DataTypes.UUID
+      },
+      connection_id: {
+        type:Sequelize.DataTypes.UUID
+      },
+      operation_id: {
+        type:Sequelize.DataTypes.UUID
+      },
+      status:{
+        type:Sequelize.DataTypes.BOOLEAN
       },
       createdAt: {
         allowNull: false,
@@ -23,6 +26,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('UserOperationConnections');
+    await queryInterface.dropTable('userOperationConnection');
   }
 };

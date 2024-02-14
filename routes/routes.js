@@ -1,5 +1,6 @@
-import express from "express";
-import { getproduct, getproductbyid, addproduct ,updateproduct , deleteproduct} from "../controllers/productDetails.js";
+const express = require("express");
+const { getproduct, getproductbyid, addproduct, updateproduct, deleteproduct } = require("../controllers/productDetails.js");;
+
 const route = express.Router();
 
 route.get("/all", getproduct);
@@ -12,4 +13,4 @@ route.put("/update/:id", updateproduct);
 
 route.delete("/delete/:id", deleteproduct);
 
-export default route;
+module.exports = route;

@@ -1,6 +1,7 @@
-import { DataTypes, Model } from 'sequelize';
+'use strict';
+const { Model } = require('sequelize');
 
-export default (sequelize) => {
+module.exports = (sequelize, DataTypes) => {
   class Conversation extends Model {
     /**
      * Helper method for defining associations.

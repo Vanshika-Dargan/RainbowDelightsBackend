@@ -1,10 +1,9 @@
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
-import Customer from '../models/customer.js'
-import Products from '../models/products.js'
+const bcrypt = require('bcrypt');
+const jwt = require('jsonwebtoken');
+const { Customer } = require('../models');
 
 
-export const login = async (req, res) => {
+const login = async (req, res) => {
   try {
     const { username, password } = req.body;
     if (!username) {
@@ -62,7 +61,7 @@ export const login = async (req, res) => {
   }
 };
 
-export const signup = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const { username, password, name } = req.body;
     if (!username || !password || !name) {
@@ -95,3 +94,5 @@ export const signup = async (req, res) => {
     });
   }
 };
+
+module.exports = {login, signup}

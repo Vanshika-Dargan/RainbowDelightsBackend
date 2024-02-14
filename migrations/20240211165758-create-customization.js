@@ -2,27 +2,40 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('Customizations', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.createTable('customization', {
+      id:{
+        type:Sequelize.DataTypes.UUID,
+        primaryKey:true,
+        allowNull:false,
+        defaultValue:Sequelize.DataTypes.UUIDV4
       },
-      id: {
-        type: Sequelize.UUID
+      product_id:{
+        type:Sequelize.DataTypes.UUID,
+        allowNull:false
+      },
+      size_id:{
+        type:Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.UUID),
+        allowNull:true,
+      },
+      topping_id:{
+        type:Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.UUID),
+        allowNull:true
+      },
+      decoration_id:{
+        type:Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.UUID),
+        allowNull:true
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE
+        type: Sequelize.DataTypes.DATE
       }
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('Customizations');
+    await queryInterface.dropTable('customization');
   }
 };

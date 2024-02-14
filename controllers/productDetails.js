@@ -1,114 +1,93 @@
+const {Products} = require("../models")
 
-
-export const getproduct = (req, res) => {
-    const queryText = `SELECT * FROM products`;
-  
-    pool.query(queryText, (error, result) => {
-      if (error) {
-        console.error("Error executing query", error);
-        res.status(500).json({ error: "Internal server error" });
-      } else {
-        res.status(200).json(result.rows);
-      }
-    });
+const getproduct = (req, res) => {
+    Products.findAll().then((result)=>{
+      res.status(200).json(result);
+    }).catch((err)=>{
+      console.error("Error executing query", error);
+      res.status(500).json({ error: "Internal server error" });
+    })
 }
 
-export const getproductbyid = (req, res) => {
+const getproductbyid = async (req, res) => {
     const id = req.params.id;
-  
-    const queryText = `SELECT * FROM products WHERE id = $1`;
-  
-    const queryValues = [id];
-  
-    pool.query(queryText, queryValues, (error, result) => {
-      if (error) {
-        console.error("Error executing query", error);
-        res.status(500).json({ error: "Internal server error" });
-      } else {
-        if (result.rows.length === 0) {
-          res.status(404).json({ message: "Product not found" });
+
+    Product.findByPk(id).then(( result)=> {
+      if (!result) {
+        res.status(404).json({ message: "Product not found" });
+      }else{
+          res.status(200).json(result);
+      }
+    }).catch ((error)=> {
+      console.error("Error executing query", error);
+      res.status(500).json({ error: "Internal server error" });
+    })
+};
+
+const addproduct = async (req, res) => {
+  const { name, cost_per_item, quantity, available, category, image } = req.body;
+
+  Products.create({
+          name,
+          cost_per_item,
+          quantity,
+          available,
+          category,
+          image,
+  }).then((result)=>{
+      
+      console.log("Data inserted successfully");
+      res.status(200).json({ message: "Data inserted successfully", product: result });
+  }).catch((error)=> {
+      console.error("Error executing query", error);
+      res.status(500).json({ error: "Internal server error" });
+  })
+};
+
+const updateproduct = async (req, res) => {
+  const id = req.params.id;
+  const { name, cost_per_item, quantity, available, category, image } = req.body;
+
+  Products.update({
+          name,
+          cost_per_item,
+          quantity,
+          available,
+          category,
+          image,
+    }, {
+          where: { id }
+    }).then((result)=>{
+      
+        if (!result) {
+            console.log("No data found to update");
+            res.status(404).json({ message: "Product not found" });
         } else {
-          res.status(200).json(result.rows[0]);
+            console.log("Data updated successfully");
+            res.status(200).json({ message: "Data updated successfully" });
         }
-      }
-    });
-}
-
-export const addproduct = (req, res) => {
-    const { id, name, cost_per_item, quantity, available, category, image } =req.body;
-  
-    const queryText = `INSERT INTO products (id, name, cost_per_item, quantity, available, category, image) 
-          VALUES ($1, $2, $3, $4, $5, $6, $7)`;
-    
-    const queryValues = [
-      id,
-      name,
-      cost_per_item,
-      quantity,
-      available,
-      category,
-      image,
-    ];
-  
-    pool.query(queryText, queryValues, (error, result) => {
-      if (error) {
+    }).catch ((error)=> {
         console.error("Error executing query", error);
         res.status(500).json({ error: "Internal server error" });
-      } else {
-        console.log("Data inserted successfully");
-        res.status(200).json({ message: "Data inserted successfully" });
-      }
-    });
-}
+    })
+};
 
-export const updateproduct = (req, res) => {
-    const id = req.params.id;
-    const { name, cost_per_item, quantity, available, category, image } =
-      req.body;
-  
-    const queryText = `
-          UPDATE products 
-          SET name = $1, cost_per_item = $2, quantity = $3, available = $4, category = $5, image = $6
-          WHERE id = $7
-      `;
-  
-    const queryValues = [
-      name,
-      cost_per_item,
-      quantity,
-      available,
-      category,
-      image,
-      id,
-    ];
-  
-    pool.query(queryText, queryValues, (error, result) => {
-      if (error) {
-        console.error("Error executing query", error);
-        res.status(500).json({ error: "Internal server error" });
-      } else {
-        console.log("Data updated successfully");
-        res.status(200).json({ message: "Data updated successfully" });
-      }
-    });
-}
+const deleteproduct = async (req, res) => {
+  const id = req.params.id;
 
-export const deleteproduct = (req, res) => {
-    const id = req.params.id;
-  
-    const queryText = `
-          DELETE FROM products WHERE id = $1
-      `;
-  
-    const queryValues = [id];
-  
-    pool.query(queryText, queryValues, (error, result) => {
-      if (error) {
-        console.error("Error executing query", error);
-        res.status(500).json({ error: "Internal server error" });
+  Product.destroy({ where: { id: id }}).then((result)=>{
+      
+      if (!result) {
+          console.log("No data found to delete");
+          res.status(404).json({ message: "Product not found" });
       } else {
-        console.log("Data deleted successfully");
-        res.status(200).json({ message: "Data deleted successfully" });
+          console.log("Data deleted successfully");
+          res.status(200).json({ message: "Data deleted successfully" });
       }
-    });
-}
+  }).catch ((error)=> {
+      console.error("Error executing query", error);
+      res.status(500).json({ error: "Internal server error" });
+  })
+};
+
+module.exports = { getproduct, getproductbyid, addproduct, addproduct, updateproduct, deleteproduct};

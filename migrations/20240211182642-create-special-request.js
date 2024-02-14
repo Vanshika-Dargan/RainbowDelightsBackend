@@ -2,15 +2,28 @@
 /** @type {import('sequelize-cli').Migration} */
 module.exports = {
   async up(queryInterface, Sequelize) {
-    await queryInterface.createTable('SpecialRequests', {
-      id: {
-        allowNull: false,
-        autoIncrement: true,
-        primaryKey: true,
-        type: Sequelize.INTEGER
+    await queryInterface.createTable('specialRequest', {
+      id:{
+        type:Sequelize.DataTypes.UUID,
+        primaryKey:true,
+        allowNull:false,
+        defaultValue:Sequelize.DataTypes.UUIDV4
       },
-      id: {
-        type: Sequelize.UUID
+      size:{
+        type:Sequelize.DataTypes.FLOAT,
+        allowNull:true,
+      },
+      topping:{
+        type:Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
+        allowNull:true
+      },
+      decoration_id:{
+        type:Sequelize.DataTypes.ARRAY(Sequelize.DataTypes.STRING),
+        allowNull:true
+      },
+      prize:{
+        type:Sequelize.DataTypes.INTEGER,
+        allowNull:false
       },
       createdAt: {
         allowNull: false,
@@ -23,6 +36,6 @@ module.exports = {
     });
   },
   async down(queryInterface, Sequelize) {
-    await queryInterface.dropTable('SpecialRequests');
+    await queryInterface.dropTable('specialRequest');
   }
 };
