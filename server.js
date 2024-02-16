@@ -1,19 +1,14 @@
 const express = require('express');
-const productRoutes = require('./routes/routes.js');
-const db = require('./models/index.js');
-
-
-
-
-const chatRoute= require('./routes/chatRoutes');
+const productRoutes = require('./routes/productRoutes');
+const chatRoutes= require('./routes/chatRoutes');
+const db = require('./models');
 
 const app=express();
 const PORT=process.env.PORT || 3000;
 
 app.use(express.json());
-
 app.use('/product',productRoutes);
-app.use('/chat',chatRoute);
+app.use('/chat',chatRoutes);
 
 
 app.listen(PORT,async()=>{
@@ -25,8 +20,3 @@ app.listen(PORT,async()=>{
     })
 })
 
-// db.sequelize.sync().then((req)=>{
-//     http.listen(1000, () => {
-//         console.log("Listening....");
-//     });
-// })

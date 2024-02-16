@@ -1,7 +1,5 @@
 const express=require("express")
 const route = express.Router();
-
-const {Message,Queue_System,User_Client_Connection}=require("../models");
 const {search_connection,close_conversation,get_client,queue_count,get_client_count,search_operator,get_message,addtoqueue,checkqueue,send_message}=require('../controllers/chatController')
 
 
