@@ -1,7 +1,8 @@
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
-
+const {promisify} = require("util");
+const { nextTick } = require('process');
 
 const login = async (req, res) => {
   try {
@@ -39,12 +40,17 @@ const login = async (req, res) => {
         expiresIn: process.env.JWT_EXPIRY_DAY
       });
 
+      const options = {
+        expires : new Date(Date.now()+process.env.JWT_COOKIE_EXPIRY_DAY * 24*60*60*1000),
+        httpOnly:true
+      }
+
+      res.cookie("jwt",token,options)
       return res.status(200).json({
         message: "Login successful",
         data: {
           userId: user.id,
           username: user.username,
-          token
         }
       });
     }
@@ -54,7 +60,6 @@ const login = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       message: error.message
     });
@@ -88,11 +93,56 @@ const signup = async (req, res) => {
     });
 
   } catch (error) {
-    console.error(error);
     return res.status(500).json({
       message: error.message
     });
   }
 };
 
-module.exports = {login, signup}
+const logout = async(_,res) => {
+  try{
+    const options = {
+        expires : new Date(
+            Date.now()+process.env.JWT_COOKIE_EXPIRY_DAY * 24 *60*60*1000
+        ),
+        httpOnly:true
+    }
+    
+    res.cookie("jwt","",options)  
+    res.status(200).send("successfully loged out")
+  }catch(error){
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+};
+
+const protection = async(req, res) => {
+  try{
+    const token = (req.headers.cookie).split('=')[1];
+
+    if (!token) {
+      return res.status(400).json({
+        message: "You have being logged out."
+      });
+    }
+
+    const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
+
+    const user = await User.findOne({where:{id:userId}})
+  
+    if (!user) {
+      return res.status(401).json({
+        message: "The user doesn't not exists."
+      });
+    }
+    req.userId = user.id;
+    next()
+  }catch(error){
+    return res.status(500).json({
+      message: error.message
+    });
+  }
+}
+
+module.exports = {login, signup, logout, protection}
