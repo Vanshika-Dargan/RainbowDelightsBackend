@@ -5,22 +5,45 @@ const authRouter = require('./routes/auth.js');
 const db = require('./models');
 const { config } = require('dotenv');
 config();
+const bodyParser = require('body-parser');
+
+
+
 
 const app=express();
-const PORT=process.env.PORT || 3000;
-app.use(express.json());
+const PORT=process.env.PORT || 1000;
+app.use(bodyParser.urlencoded({ extended: true }));
+
+
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS, PUT, PATCH, DELETE');
+    res.header('Access-Control-Allow-Headers', 'Content-Type, Authorization');
+
+    // Handle preflight requests
+    if (req.method === 'OPTIONS') {
+        res.sendStatus(200);
+    } else {
+        next();
+    }
+});
 
 app.use('/api', authRouter);
 app.use('/product',productRoutes);
 app.use('/chat',chatRoutes);
 
 
-app.listen(PORT,async()=>{
+app.get('/', (req, res) => {
+    res.send("Welcome to Home Page");
+});
+
+
+app.listen(1000, async () => {
     console.log(`Server running on Port ${PORT}`);
-    db.sequelize.sync({force:true}).then(()=>{
-        console.log("Database is connected.")
-    }).catch((err)=>{
-        console.log("Database is not connected.")
-    })
-})
+    db.sequelize.sync({force:true}).then(() => {
+        console.log("Database is connected.");
+    }).catch((err) => {
+        console.log("Database is not connected.");
+    });
+});
 

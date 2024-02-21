@@ -1,5 +1,6 @@
 const { Product } = require("../models");
 
+
 const getproduct = async (req, res) => {
     try {
         const products = await Product.findAll();
@@ -26,7 +27,9 @@ const getproductbyid = async (req, res) => {
 }
 
 const addproduct = async (req, res) => {
+
     const { name, cost_per_item,weight_per_item,net_quantity, quantity_per_item,category, image, ingredients} = req.body;
+
     try {
         const product=await Product.create({
             name,
@@ -36,7 +39,7 @@ const addproduct = async (req, res) => {
             weight_per_item,
             category,
             image,
-            ingredients,  
+            ingredients,
         });
         console.log("Product added in database");
         res.status(201).json({ product:product,message: "Product added successfully in database",success:true });
@@ -65,7 +68,7 @@ const updateproduct = async (req, res) => {
             ingredients,
             },{
                 where: {
-                  id 
+                  id
                 }
             }
             );
@@ -87,7 +90,7 @@ const deleteproduct = async (req, res) => {
         } else {
             await Product.destroy({
                 where: {
-                  id 
+                  id
                 }
             });
             console.log("Product deleted successfully");
