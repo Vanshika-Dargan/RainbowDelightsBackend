@@ -6,14 +6,15 @@ const db = require('./models');
 const { config } = require('dotenv');
 config();
 const bodyParser = require('body-parser');
+const multer = require('multer');
+const uploadMiddleWare = multer({ dest: 'uploads/' });
 
-
-
+module.exports.uploadMiddleWare= uploadMiddleWare;
 
 const app=express();
 const PORT=process.env.PORT || 1000;
 app.use(bodyParser.urlencoded({ extended: true }));
-
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use((req, res, next) => {
     res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
@@ -29,7 +30,7 @@ app.use((req, res, next) => {
 });
 
 app.use('/api', authRouter);
-app.use('/product',productRoutes);
+app.use('/product',uploadMiddleWare.single('image'),productRoutes);
 app.use('/chat',chatRoutes);
 
 
@@ -38,7 +39,7 @@ app.get('/', (req, res) => {
 });
 
 
-app.listen(1000, async () => {
+app.listen(5000, async () => {
     console.log(`Server running on Port ${PORT}`);
     db.sequelize.sync({force:true}).then(() => {
         console.log("Database is connected.");
