@@ -5,8 +5,8 @@ const searchConnection =  async (req, res) => {
 
     const operatorName = req.params.operatorName;
     UserClientConnection.findAll({where : {operator : operatorName}}).then((result)=>{
-        res.json(result[0]["userName"]);
-        console.log("running...");
+        res.json(result[0]["username"]);
+
     }).catch((err) =>{
         console.log(err);
     })
@@ -38,13 +38,13 @@ const getClient= async (req, res) => {
         }
 
         const createdUserClient = await UserClientConnection.create({
-            userName: result.userName,
+            username: result.username,
             operator: operatorName
         });
 
-        await QueueSystem.destroy({where: {userName: result.userName}});
+        await QueueSystem.destroy({where: {username: result.username}});
 
-        res.json(createdUserClient.userName);
+        res.json(createdUserClient.username);
     } catch (err) {
         console.error('Error fetching client:', err);
         res.status(500).json({error: "Internal server error"});
@@ -60,7 +60,7 @@ const queueCount = async (req, res) => {
         let count=0;
         for (let i in result){
             count+=1
-            if (result[i]["userName"]===userName){
+            if (result[i]["username"]===userName){
                 break
             }
         }
@@ -89,7 +89,7 @@ const getClientCount=async (req, res) => {
 
 const searchOperator= (req,res)=>{
     const userName = req.params.userName;
-    UserClientConnection.findAll({where :{ userName : userName}}).then((result)=>{
+    UserClientConnection.findAll({where :{ username : userName}}).then((result)=>{
         res.json(result[0]);
     }).catch((err)=>{
         res.json("no data");
@@ -123,9 +123,8 @@ const getMessage= (req, res) => {
 
 const addtoqueue= (req,res)=>{
     const { userName }=req.params;
-    console.log(userName);
     QueueSystem.create({
-        userName : userName
+        username : userName
     }).catch((err)=>{
         console.log(err);
     })
@@ -134,8 +133,8 @@ const addtoqueue= (req,res)=>{
 
 
 const checkqueue= (req,res)=>{
-    const userName=req.params.userName;
-    QueueSystem.findAll({where :{ userName :userName}}).then((result)=>{
+    const { userName }=req.params;
+    QueueSystem.findAll({where :{ username :userName}}).then((result)=>{
         res.json(result)
     })
         .catch((err)=>{
@@ -145,12 +144,12 @@ const checkqueue= (req,res)=>{
 
 
 const sendMessage= (req,res)=>{
-    const { userName, operator, userType, message } = req.body;
-    // Now you can access username, operator, user_type, and message here
+    const { userName, operator, user_type, message } = req.body;
+    console.log(user_type,"random");
     Message.create({
         username:userName,
         operator:operator,
-        user_type:userType,
+        userType:user_type,
         message:message
     }).catch((err)=>{
         console.log(err);
