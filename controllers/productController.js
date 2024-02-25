@@ -1,5 +1,5 @@
-const {Product, BaseFlavour, Topping, Weight, Decoration} =require("../models")
-
+const { Product, BaseFlavour, Topping, Weight, Decoration } = require("../models")
+const fs = require('node:fs');
 // fixed products
 const getproduct = async (_, res) => {
     try {
@@ -32,16 +32,16 @@ const addproduct = async (req, res) => {
         price,
         weight,
         category,
-        description,} = req.body;
-        let newPath = null;
-        console.log(req.file);
-        if (req.file) {
-            const { originalname, path } = req.file;
-            const parts = originalname.split('.');
-            const ext = parts[parts.length - 1];
-            newPath = path + '.' + ext;
-            fs.renameSync(path, newPath);
-        }
+        description, } = req.body;
+    let newPath = null;
+    console.log(req.file);
+    if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
+    }
     try {
         const product = await Product.create({
             name,
@@ -50,7 +50,7 @@ const addproduct = async (req, res) => {
             weight,
             category,
             image: newPath,
-            description,  
+            description,
         });
         console.log("Product added in database");
         res.status(201).json({ product: product, message: "Product added successfully in database", success: true });
@@ -68,7 +68,7 @@ const updateproduct = async (req, res) => {
         weight,
         category,
         image,
-        description} = req.body;
+        description } = req.body;
     try {
         const product = await Product.findByPk(id);
         if (!product) {
@@ -82,7 +82,7 @@ const updateproduct = async (req, res) => {
                 category,
                 image,
                 description
-            },{
+            }, {
                 where: {
                     id
                 }
@@ -106,7 +106,7 @@ const deleteproduct = async (req, res) => {
         } else {
             await Product.destroy({
                 where: {
-                  id
+                    id
                 }
             });
             console.log("Product deleted successfully");
@@ -120,55 +120,55 @@ const deleteproduct = async (req, res) => {
 
 
 // user customization products of base flavour
-const getBaseFlavour = async (_,res)=>{
-    try{
+const getBaseFlavour = async (_, res) => {
+    try {
         const flavour = await BaseFlavour.findAll()
         res.status(200).json(flavour)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving base flavour."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving base flavour." });
     }
 }
 
-const addBaseFlavour = async (req,res)=>{
-    try{
-        const {name, price, image} = req.body
+const addBaseFlavour = async (req, res) => {
+    try {
+        const { name, price, image } = req.body
 
-        if(!name || !price || !image){
+        if (!name || !price || !image) {
             res.status(400).json({
                 message: "name, price and image are required"
             });
         }
 
-        const flavour = await BaseFlavour.create({name,price, image})
-        res.status(201).json({ baseFlavour:flavour,message: "Base flavour is added successfully in database",success:true });
+        const flavour = await BaseFlavour.create({ name, price, image })
+        res.status(201).json({ baseFlavour: flavour, message: "Base flavour is added successfully in database", success: true });
 
-    }catch(error){
+    } catch (error) {
         res.status(400).json({ error: "Error inserting base flavour" });
     }
 }
 
 const updateBaseFlavour = async (req, res) => {
     const id = req.params.id;
-    const { name, price, image} = req.body;
+    const { name, price, image } = req.body;
 
-    if(!name && !price && !image){
+    if (!name && !price && !image) {
         res.status(400).json({
             message: "we required name or price or image to update"
         });
     }
     try {
         const flavour = await BaseFlavour.findByPk(id);
-        
+
         if (!flavour) {
             res.status(404).json({ message: "Base flavour not found" });
         } else {
-            flavour.name = (name)? name:flavour.name;
-            flavour.price = (price)? price:flavour.price;
-            flavour.image = (image)? image:flavour.image; 
+            flavour.name = (name) ? name : flavour.name;
+            flavour.price = (price) ? price : flavour.price;
+            flavour.image = (image) ? image : flavour.image;
 
-            await BaseFlavour.update({...flavour},{ where: { id }});
+            await BaseFlavour.update({ ...flavour }, { where: { id } });
 
-            res.status(200).json({ baseFlavour:flavour,message: "Base flavour updated successfully",success:true});
+            res.status(200).json({ baseFlavour: flavour, message: "Base flavour updated successfully", success: true });
         }
     } catch (error) {
         res.status(400).json({ error: "Error updating base flavour" });
@@ -182,9 +182,9 @@ const deleteBaseFlavour = async (req, res) => {
         if (!flavour) {
             res.status(404).json({ message: "Base flavour not found" });
         } else {
-            await BaseFlavour.destroy({ where: {id }});
+            await BaseFlavour.destroy({ where: { id } });
 
-            res.status(200).json({ id:id, message: "Base flavour deleted successfully",success:true });
+            res.status(200).json({ id: id, message: "Base flavour deleted successfully", success: true });
         }
     } catch (error) {
         res.status(404).json({ error: "Error deleting base flavour" });
@@ -193,55 +193,55 @@ const deleteBaseFlavour = async (req, res) => {
 
 
 // user customization products of topping
-const getTopping = async (_,res)=>{
-    try{
+const getTopping = async (_, res) => {
+    try {
         const topping = await Topping.findAll()
         res.status(200).json(topping)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving topping."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving topping." });
     }
 }
 
-const addTopping = async (req,res)=>{
-    try{
-        const {name, price, image} = req.body
+const addTopping = async (req, res) => {
+    try {
+        const { name, price, image } = req.body
 
-        if(!name || !price || !image){
+        if (!name || !price || !image) {
             res.status(400).json({
                 message: "name, price and image are required"
             });
         }
 
-        const topping = await Topping.create({name,price, image})
-        res.status(201).json({ topping,message: "Topping is added successfully in database",success:true });
+        const topping = await Topping.create({ name, price, image })
+        res.status(201).json({ topping, message: "Topping is added successfully in database", success: true });
 
-    }catch(error){
+    } catch (error) {
         res.status(400).json({ error: "Error inserting base Topping" });
     }
 }
 
 const updateTopping = async (req, res) => {
     const id = req.params.id;
-    const { name, price, image} = req.body;
+    const { name, price, image } = req.body;
 
-    if(!name && !price && !image){
+    if (!name && !price && !image) {
         res.status(400).json({
             message: "we required name or price or image to update"
         });
     }
     try {
         const topping = await Topping.findByPk(id);
-        
+
         if (!topping) {
             res.status(404).json({ message: "Topping not found" });
         } else {
-            topping.name = (name)? name:topping.name;
-            topping.price = (price)? price:topping.price;
-            topping.image = (image)? image:topping.image; 
+            topping.name = (name) ? name : topping.name;
+            topping.price = (price) ? price : topping.price;
+            topping.image = (image) ? image : topping.image;
 
-            await Topping.update({...topping},{ where: { id }});
+            await Topping.update({ ...topping }, { where: { id } });
 
-            res.status(200).json({ topping,message: "Topping updated successfully",success:true});
+            res.status(200).json({ topping, message: "Topping updated successfully", success: true });
         }
     } catch (error) {
         res.status(400).json({ error: "Error updating topping" });
@@ -255,9 +255,9 @@ const deleteTopping = async (req, res) => {
         if (!topping) {
             res.status(404).json({ message: "Topping not found" });
         } else {
-            await Topping.destroy({ where: {id }});
+            await Topping.destroy({ where: { id } });
 
-            res.status(200).json({ id:id, message: "Topping deleted successfully",success:true });
+            res.status(200).json({ id: id, message: "Topping deleted successfully", success: true });
         }
     } catch (error) {
         res.status(404).json({ error: "Error deleting topping" });
@@ -266,29 +266,29 @@ const deleteTopping = async (req, res) => {
 
 
 // user customization products of weight
-const getWeight = async (_,res)=>{
-    try{
+const getWeight = async (_, res) => {
+    try {
         const weight = await Weight.findAll()
         res.status(200).json(weight)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving weight"});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving weight" });
     }
 }
 
-const addWeight = async (req,res)=>{
-    try{
-        const {name, price } = req.body
+const addWeight = async (req, res) => {
+    try {
+        const { name, price } = req.body
 
-        if(!name || !price){
+        if (!name || !price) {
             res.status(400).json({
                 message: "name and price are required"
             });
         }
 
-        const weight = await Weight.create({name,price, image})
-        res.status(201).json({ weight,message: "Weight is added successfully in database",success:true });
+        const weight = await Weight.create({ name, price, image })
+        res.status(201).json({ weight, message: "Weight is added successfully in database", success: true });
 
-    }catch(error){
+    } catch (error) {
         res.status(400).json({ error: "Error inserting base weight" });
     }
 }
@@ -297,24 +297,24 @@ const updateWeight = async (req, res) => {
     const id = req.params.id;
     const { name, price } = req.body;
 
-    if(!name && !price){
+    if (!name && !price) {
         res.status(400).json({
             message: "we required name or price to update"
         });
     }
     try {
         const weight = await Weight.findByPk(id);
-        
+
         if (!weight) {
             res.status(404).json({ message: "Weight not found" });
         } else {
-            weight.name = (name)? name:weight.name;
-            weight.price = (price)? price:weight.price;
-            weight.image = (image)? image:weight.image; 
+            weight.name = (name) ? name : weight.name;
+            weight.price = (price) ? price : weight.price;
+            weight.image = (image) ? image : weight.image;
 
-            await Weight.update({...weight},{ where: { id }});
+            await Weight.update({ ...weight }, { where: { id } });
 
-            res.status(200).json({ weight,message: "Weight updated successfully",success:true});
+            res.status(200).json({ weight, message: "Weight updated successfully", success: true });
         }
     } catch (error) {
         res.status(400).json({ error: "Error updating weight" });
@@ -328,9 +328,9 @@ const deleteWeight = async (req, res) => {
         if (!weight) {
             res.status(404).json({ message: "Weight not found" });
         } else {
-            await Weight.destroy({ where: {id }});
+            await Weight.destroy({ where: { id } });
 
-            res.status(200).json({ id:id, message: "Weight deleted successfully",success:true });
+            res.status(200).json({ id: id, message: "Weight deleted successfully", success: true });
         }
     } catch (error) {
         res.status(404).json({ error: "Error deleting weight" });
@@ -338,55 +338,55 @@ const deleteWeight = async (req, res) => {
 }
 
 // user customization products of decoration
-const getDecoration = async (_,res)=>{
-    try{
+const getDecoration = async (_, res) => {
+    try {
         const decoration = await Decoration.findAll()
         res.status(200).json(decoration)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving decoration."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving decoration." });
     }
 }
 
-const addDecoration = async (req,res)=>{
-    try{
-        const {name, price, image} = req.body
+const addDecoration = async (req, res) => {
+    try {
+        const { name, price, image } = req.body
 
-        if(!name || !price || !image){
+        if (!name || !price || !image) {
             res.status(400).json({
                 message: "name, price and image are required"
             });
         }
 
-        const decoration = await Decoration.create({name,price, image})
-        res.status(201).json({ decoration,message: "Decoration is added successfully in database",success:true });
+        const decoration = await Decoration.create({ name, price, image })
+        res.status(201).json({ decoration, message: "Decoration is added successfully in database", success: true });
 
-    }catch(error){
+    } catch (error) {
         res.status(400).json({ error: "Error inserting decoration" });
     }
 }
 
 const updateDecoration = async (req, res) => {
     const id = req.params.id;
-    const { name, price, image} = req.body;
+    const { name, price, image } = req.body;
 
-    if(!name && !price && !image){
+    if (!name && !price && !image) {
         res.status(400).json({
             message: "we required name or price or image to update"
         });
     }
     try {
         const decoration = await Decoration.findByPk(id);
-        
+
         if (!decoration) {
             res.status(404).json({ message: "Decoration not found" });
         } else {
-            decoration.name = (name)? name:decoration.name;
-            decoration.price = (price)? price:decoration.price;
-            decoration.image = (image)? image:decoration.image; 
+            decoration.name = (name) ? name : decoration.name;
+            decoration.price = (price) ? price : decoration.price;
+            decoration.image = (image) ? image : decoration.image;
 
-            await decoration.update({...decoration},{ where: { id }});
+            await decoration.update({ ...decoration }, { where: { id } });
 
-            res.status(200).json({ decoration,message: "Decoration updated successfully",success:true});
+            res.status(200).json({ decoration, message: "Decoration updated successfully", success: true });
         }
     } catch (error) {
         res.status(400).json({ error: "Error updating decoration" });
@@ -400,9 +400,9 @@ const deleteDecoration = async (req, res) => {
         if (!decoration) {
             res.status(404).json({ message: "Decoration not found" });
         } else {
-            await Decoration.destroy({ where: {id }});
+            await Decoration.destroy({ where: { id } });
 
-            res.status(200).json({ id:id, message: "Decoration deleted successfully",success:true });
+            res.status(200).json({ id: id, message: "Decoration deleted successfully", success: true });
         }
     } catch (error) {
         res.status(404).json({ error: "Error deleting decoration" });
