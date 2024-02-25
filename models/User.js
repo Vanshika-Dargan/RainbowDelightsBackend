@@ -1,4 +1,3 @@
-const {DataTypes} = require("sequelize");
 module.exports= (sequelize,DataTypes)=>{
     const User= sequelize.define("User",{
         id: {
@@ -6,7 +5,7 @@ module.exports= (sequelize,DataTypes)=>{
             primaryKey:true,
             defaultValue:DataTypes.UUIDV4
           },
-          username:{
+          userName:{
             type:DataTypes.STRING,
             allowNull:false
           },
@@ -29,7 +28,7 @@ module.exports= (sequelize,DataTypes)=>{
           //   type:DataTypes.TEXT,
           //   allowNull:false
           // },
-          user_type:{
+          userType:{
             type:DataTypes.ENUM('admin','client'),
             allowNull:false,
             defaultValue:'client'

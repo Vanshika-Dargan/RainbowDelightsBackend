@@ -1,41 +1,41 @@
 const express=require("express")
 const route = express.Router();
-const {search_connection,close_conversation,get_client,queue_count,get_client_count,search_operator,get_message,addtoqueue,checkqueue,send_message}=require('../controllers/chatController')
+const {searchConnection,closeConversation,getClient,queueCount,getClientCount,searchOperator,getMessage,addtoqueue,checkqueue,sendMessage}=require('../controllers/chatController')
 
 
 
 
 
-route.get("/api/search_connection/:operator_name", search_connection);
+route.get("/api/search_connection/:operatorName", searchConnection);
 
-route.get("/api/close_conversation/:operator_name",close_conversation);
-
-
-route.get("/api/get_client/:operator_name", get_client);
+route.get("/api/close_conversation/:operatorName",closeConversation);
 
 
-
-
-route.get("/api/queue_count/:username", queue_count);
-
-route.get("/api/get_client_count", get_client_count);
-
-
-route.get("/api/search_operator/:username",search_operator)
-
-
-route.get('/api/get_messages/:username/:operator', get_message);
+route.get("/api/get_client/:operatorName", getClient);
 
 
 
 
-route.get('/api/addtoqueue/:username',addtoqueue)
+route.get("/api/queue_count/:userName", queueCount);
+
+route.get("/api/get_client_count", getClientCount);
 
 
-route.get('/api/checkqueue/:username',checkqueue)
+route.get("/api/search_operator/:userName",searchOperator)
 
 
-route.post("/api/send_message",send_message)
+route.get('/api/get_messages/:userName/:operator', getMessage);
+
+
+
+
+route.get('/api/addtoqueue/:userName',addtoqueue)
+
+
+route.get('/api/checkqueue/:userName',checkqueue)
+
+
+route.post("/api/send_message",sendMessage)
 
 
 module.exports = route;

@@ -1,4 +1,3 @@
-const {DataTypes} = require("sequelize");
 module.exports= (sequelize,DataTypes)=>{
     const Message= sequelize.define("Message",{
         username:{
@@ -10,7 +9,7 @@ module.exports= (sequelize,DataTypes)=>{
         message:{
             type : DataTypes.STRING
         },
-        user_type:{
+        userType:{
             type :DataTypes.STRING
         }
     })

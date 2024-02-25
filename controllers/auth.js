@@ -2,12 +2,12 @@ const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
 const { User } = require('../models');
 const {promisify} = require("util");
-const { nextTick } = require('process');
+
 
 const login = async (req, res) => {
   try {
-    const { username, password } = req.body;
-    if (!username) {
+    const { userName, password } = req.body;
+    if (!userName) {
       return res.status(400).json({
         message: "Username is required"
       });
@@ -20,9 +20,9 @@ const login = async (req, res) => {
 
     const user = await User.findOne({
       where: {
-        username,
+        userName,
       },
-      attributes: ['id', 'username', 'password'],
+      attributes: ['id', 'userName', 'password'],
     });
 
     if (!user) {
@@ -68,8 +68,8 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const { username, password, name } = req.body;
-    if (!username || !password || !name) {
+    const { userName, password, name } = req.body;
+    if (!userName || !password || !name) {
       return res.status(400).json({
         message: "Username, password, and name are required"
       });
@@ -78,7 +78,7 @@ const signup = async (req, res) => {
     const hashPassword = await bcrypt.hash(password, 8);
 
     const user = await User.create({
-      username,
+      userName,
       password: hashPassword,
       name,
     });
@@ -87,7 +87,7 @@ const signup = async (req, res) => {
       message: "User added successfully",
       data: {
         userId: user.id,
-        username: user.username,
+        userName: user.userName,
         name: user.name,
       }
     });
@@ -117,7 +117,7 @@ const logout = async(_,res) => {
   }
 };
 
-const protection = async(req, res) => {
+const protection = async(req, res,next) => {
   try{
     const token = (req.headers.cookie).split('=')[1];
 

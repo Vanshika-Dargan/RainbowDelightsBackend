@@ -1,11 +1,11 @@
-const {User_Client_Connection, Message, Queue_System} = require("../models");
+const {UserClientConnection, Message, QueueSystem} = require("../models");
 
 
-const search_connection =  async (req, res) => {
+const searchConnection =  async (req, res) => {
 
-    const operator_name = req.params.operator_name;
-    User_Client_Connection.findAll({where : {operator : operator_name}}).then((result)=>{
-        res.json(result[0]["username"]);
+    const operatorName = req.params.operatorName;
+    UserClientConnection.findAll({where : {operator : operatorName}}).then((result)=>{
+        res.json(result[0]["userName"]);
         console.log("running...");
     }).catch((err) =>{
         console.log(err);
@@ -15,36 +15,36 @@ const search_connection =  async (req, res) => {
 
 
 
-const close_conversation =  async (req, res) => {
+const closeConversation =  async (req, res) => {
 
-        const operator_name = req.params.operator_name;
-        User_Client_Connection.destroy({where :{operator: operator_name}})
+        const operatorName = req.params.operatorName;
+        UserClientConnection.destroy({where :{operator: operatorName}})
             .then((result)=>{
-                Message.destroy({where :{operator:operator_name}})
+                Message.destroy({where :{operator:operatorName}})
                 res.json("successful");
             })
 }
 
 
-const get_client= async (req, res) => {
+const getClient= async (req, res) => {
     try {
-        const operator_name = req.params.operator_name;
+        const operatorName = req.params.operatorName;
 
         // Assuming `Queue_System` and `User_Client_Connection` are Sequelize models
-        const result = await Queue_System.findOne();
+        const result = await QueueSystem.findOne();
 
         if (!result) {
             return res.status(404).json({error: "No client found"});
         }
 
-        const createdUserClient = await User_Client_Connection.create({
-            username: result.username,
-            operator: operator_name
+        const createdUserClient = await UserClientConnection.create({
+            userName: result.userName,
+            operator: operatorName
         });
 
-        await Queue_System.destroy({where: {username: result.username}});
+        await QueueSystem.destroy({where: {userName: result.userName}});
 
-        res.json(createdUserClient.username);
+        res.json(createdUserClient.userName);
     } catch (err) {
         console.error('Error fetching client:', err);
         res.status(500).json({error: "Internal server error"});
@@ -52,15 +52,15 @@ const get_client= async (req, res) => {
 }
 
 
-const queue_count = async (req, res) => {
-    const username = req.params.username;
+const queueCount = async (req, res) => {
+    const userName = req.params.userName;
 
 
-    Queue_System.findAll().then((result)=>{
+    QueueSystem.findAll().then((result)=>{
         let count=0;
         for (let i in result){
             count+=1
-            if (result[i]["username"]===username){
+            if (result[i]["userName"]===userName){
                 break
             }
         }
@@ -73,13 +73,11 @@ const queue_count = async (req, res) => {
 }
 
 
-const get_client_count=async (req, res) => {
-    const username = req.params.username;
+const getClientCount=async (req, res) => {
+    const userName = req.params.userName;
 
 
-    Queue_System.findAll().then((result)=>{
-
-
+    QueueSystem.findAll().then((result)=>{
         res.json(result.length);
     }).catch((err)=>{
         console.log(err);
@@ -89,9 +87,9 @@ const get_client_count=async (req, res) => {
 }
 
 
-const search_operator= (req,res)=>{
-    const username = req.params.username;
-    User_Client_Connection.findAll({where :{ username : username}}).then((result)=>{
+const searchOperator= (req,res)=>{
+    const userName = req.params.userName;
+    UserClientConnection.findAll({where :{ userName : userName}}).then((result)=>{
         res.json(result[0]);
     }).catch((err)=>{
         res.json("no data");
@@ -100,16 +98,16 @@ const search_operator= (req,res)=>{
 }
 
 
-const get_message= (req, res) => {
+const getMessage= (req, res) => {
     // Extracting username and operator from request parameters
-    const { username, operator } = req.params;
+    const { userName, operator } = req.params;
 
 
     // Finding messages based on username and operator
     Message.findAll({
         where: {
             operator: operator,
-            username: username
+            username: userName
         }
     })
         .then((result) => {
@@ -124,10 +122,10 @@ const get_message= (req, res) => {
 
 
 const addtoqueue= (req,res)=>{
-    const { username }=req.params;
-    console.log(username);
-    Queue_System.create({
-        username : username
+    const { userName }=req.params;
+    console.log(userName);
+    QueueSystem.create({
+        userName : userName
     }).catch((err)=>{
         console.log(err);
     })
@@ -136,8 +134,8 @@ const addtoqueue= (req,res)=>{
 
 
 const checkqueue= (req,res)=>{
-    const username=req.params.username;
-    Queue_System.findAll({where :{ username :username}}).then((result)=>{
+    const userName=req.params.userName;
+    QueueSystem.findAll({where :{ userName :userName}}).then((result)=>{
         res.json(result)
     })
         .catch((err)=>{
@@ -146,13 +144,13 @@ const checkqueue= (req,res)=>{
 }
 
 
-const send_message= (req,res)=>{
-    const { username, operator, user_type, message } = req.body;
+const sendMessage= (req,res)=>{
+    const { userName, operator, userType, message } = req.body;
     // Now you can access username, operator, user_type, and message here
     Message.create({
-        username:username,
+        username:userName,
         operator:operator,
-        user_type:user_type,
+        user_type:userType,
         message:message
     }).catch((err)=>{
         console.log(err);
@@ -162,4 +160,4 @@ const send_message= (req,res)=>{
 
 
 
-module.exports = {search_connection, close_conversation,get_client,queue_count,get_client_count,search_operator,get_message,addtoqueue,checkqueue,send_message};
+module.exports = {searchConnection, closeConversation,getClient,queueCount,getClientCount,searchOperator,getMessage,addtoqueue,checkqueue,sendMessage};
