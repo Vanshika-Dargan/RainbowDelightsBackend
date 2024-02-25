@@ -1,5 +1,5 @@
 const { Product } = require("../models");
-
+const fs = require("node:fs");
 
 const getproduct = async (req, res) => {
     try {
@@ -28,7 +28,7 @@ const getproductbyid = async (req, res) => {
 
 const addproduct = async (req, res) => {
 
-    const { name, cost_per_item, weight_per_item, net_quantity, quantity_per_item, category, ingredients } = req.body;
+    const { name, cost_per_item, weight_per_item, net_quantity, quantity_per_item, category, description } = req.body;
     let newPath = null;
     console.log(req.file);
     if (req.file) {
@@ -46,8 +46,8 @@ const addproduct = async (req, res) => {
             cost_per_item,
             weight_per_item,
             category,
-            image:newPath,
-            ingredients,
+            image: newPath,
+            ingredients: description,
         });
         console.log("Product added in database");
         res.status(201).json({ product: product, message: "Product added successfully in database", success: true });
