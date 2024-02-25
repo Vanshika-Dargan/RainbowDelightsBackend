@@ -28,29 +28,30 @@ const getproductbyid = async (req, res) => {
 }
 
 const addproduct = async (req, res) => {
-    const { name, netQuantity,
-        price,
-        weight,
-        category,
-        image,
-        description,} = req.body;
+
+    const { name, netQuantity, price, weight, category, description } = req.body;
+
+    // Check if a file was uploaded
+    const image = req.file.filename;
+
     try {
-        const product=await Product.create({
+        const product = await Product.create({
             name,
             netQuantity,
             price,
             weight,
             category,
-            image,
-            description,  
+            image,  // Assign the filename of the uploaded file
+            description,
         });
         console.log("Product added in database");
-        res.status(201).json({ product:product,message: "Product added successfully in database",success:true });
+        res.status(201).json({ product: product, message: "Product added successfully in database", success: true });
     } catch (error) {
         console.error("Error inserting product", error);
         res.status(400).json({ error: "Error inserting product" });
     }
 }
+
 
 const updateproduct = async (req, res) => {
     const id = req.params.id;
@@ -76,7 +77,7 @@ const updateproduct = async (req, res) => {
                 description
             },{
                 where: {
-                  id 
+                  id
                 }
             }
             );
@@ -150,13 +151,13 @@ const updateBaseFlavour = async (req, res) => {
     }
     try {
         const flavour = await BaseFlavour.findByPk(id);
-        
+
         if (!flavour) {
             res.status(404).json({ message: "Base flavour not found" });
         } else {
             flavour.name = (name)? name:flavour.name;
             flavour.price = (price)? price:flavour.price;
-            flavour.image = (image)? image:flavour.image; 
+            flavour.image = (image)? image:flavour.image;
 
             await BaseFlavour.update({...flavour},{ where: { id }});
 
@@ -223,13 +224,13 @@ const updateTopping = async (req, res) => {
     }
     try {
         const topping = await Topping.findByPk(id);
-        
+
         if (!topping) {
             res.status(404).json({ message: "Topping not found" });
         } else {
             topping.name = (name)? name:topping.name;
             topping.price = (price)? price:topping.price;
-            topping.image = (image)? image:topping.image; 
+            topping.image = (image)? image:topping.image;
 
             await Topping.update({...topping},{ where: { id }});
 
@@ -296,13 +297,13 @@ const updateWeight = async (req, res) => {
     }
     try {
         const weight = await Weight.findByPk(id);
-        
+
         if (!weight) {
             res.status(404).json({ message: "Weight not found" });
         } else {
             weight.name = (name)? name:weight.name;
             weight.price = (price)? price:weight.price;
-            weight.image = (image)? image:weight.image; 
+            weight.image = (image)? image:weight.image;
 
             await Weight.update({...weight},{ where: { id }});
 
@@ -368,13 +369,13 @@ const updateDecoration = async (req, res) => {
     }
     try {
         const decoration = await Decoration.findByPk(id);
-        
+
         if (!decoration) {
             res.status(404).json({ message: "Decoration not found" });
         } else {
             decoration.name = (name)? name:decoration.name;
             decoration.price = (price)? price:decoration.price;
-            decoration.image = (image)? image:decoration.image; 
+            decoration.image = (image)? image:decoration.image;
 
             await decoration.update({...decoration},{ where: { id }});
 
