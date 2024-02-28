@@ -7,7 +7,7 @@ const getproduct = async (_, res) => {
         res.status(200).send(product)
         // res.status(200).json(products);
     } catch (error) {
-        console.error("Error retrieving products", error);
+    
         res.status(404).json({error:"Error retrieving product"});
     }
 }
@@ -22,7 +22,7 @@ const getproductbyid = async (req, res) => {
             res.status(200).json({product:product,success:true});
         }
     } catch (error) {
-        console.error("Error retrieving product", error);
+console.error("Error retrieving product", error);
         res.status(404).json({error:"Error retrieving product"});
     }
 }
@@ -33,6 +33,7 @@ const addproduct = async (req, res) => {
         weight,
         category,
         image,
+        ingredients,
         description,} = req.body;
     try {
         const product=await Product.create({
@@ -42,6 +43,7 @@ const addproduct = async (req, res) => {
             weight,
             category,
             image,
+            ingredients,
             description,  
         });
         console.log("Product added in database");
@@ -114,8 +116,9 @@ const deleteproduct = async (req, res) => {
 // user customization products of base flavour
 const getBaseFlavour = async (_,res)=>{
     try{
+        console.log("\n\n","dkdfffj","\n\n\n")
         const flavour = await BaseFlavour.findAll()
-        res.status(200).json(flavour)
+        res.status(200).send(flavour)
     }catch(error){
         res.status(404).json({error:"Error retrieving base flavour."});
     }
@@ -188,7 +191,7 @@ const deleteBaseFlavour = async (req, res) => {
 const getTopping = async (_,res)=>{
     try{
         const topping = await Topping.findAll()
-        res.status(200).json(topping)
+        res.status(200).send(topping)
     }catch(error){
         res.status(404).json({error:"Error retrieving topping."});
     }
@@ -261,7 +264,7 @@ const deleteTopping = async (req, res) => {
 const getWeight = async (_,res)=>{
     try{
         const weight = await Weight.findAll()
-        res.status(200).json(weight)
+        res.status(200).send(weight)
     }catch(error){
         res.status(404).json({error:"Error retrieving weight"});
     }
@@ -269,15 +272,15 @@ const getWeight = async (_,res)=>{
 
 const addWeight = async (req,res)=>{
     try{
-        const {name, price } = req.body
+        const {size, price } = req.body
 
-        if(!name || !price){
+        if(!size || !price){
             res.status(400).json({
                 message: "name and price are required"
             });
         }
 
-        const weight = await Weight.create({name,price, image})
+        const weight = await Weight.create({size,price, image})
         res.status(201).json({ weight,message: "Weight is added successfully in database",success:true });
 
     }catch(error){
@@ -333,7 +336,7 @@ const deleteWeight = async (req, res) => {
 const getDecoration = async (_,res)=>{
     try{
         const decoration = await Decoration.findAll()
-        res.status(200).json(decoration)
+        res.status(200).send(decoration)
     }catch(error){
         res.status(404).json({error:"Error retrieving decoration."});
     }

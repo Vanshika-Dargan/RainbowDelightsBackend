@@ -23,17 +23,21 @@ module.exports= (sequelize,DataTypes)=>{
           },
           category:{
             type:DataTypes.TEXT,
-            allowNull:true,
+            allowNull:false,
             defaultValue:'Others'
           },
           image:{
             type:DataTypes.TEXT,
             allowNull:false,
           },
+          ingredients:{
+            type:DataTypes.ARRAY(DataTypes.STRING),
+            allowNull:true
+          },
           description:{
             type:DataTypes.TEXT,
-            allowNull:false
-          },    
+            allowNull:true
+          }  
     })
     return Product;
 
