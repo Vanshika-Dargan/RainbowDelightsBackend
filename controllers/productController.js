@@ -32,9 +32,9 @@ const addproduct = async (req, res) => {
         price,
         weight,
         category,
-        
+        ingredients,
         description, } = req.body;
-    let newPath = null;
+    let newPath = "";
     console.log(req.file);
     if (req.file) {
         const { originalname, path } = req.file;
@@ -52,6 +52,7 @@ const addproduct = async (req, res) => {
             category,
             image: newPath,
             description,
+            ingredients
         });
         console.log("Product added in database");
         res.status(201).json({ product: product, message: "Product added successfully in database", success: true });
