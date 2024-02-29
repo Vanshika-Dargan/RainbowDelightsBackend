@@ -1,6 +1,6 @@
 module.exports= (sequelize,DataTypes)=>{
     const UserClientConnection= sequelize.define("UserClientConnection",{
-        username:{
+        userName:{
             type : DataTypes.STRING
         },
         operator:{

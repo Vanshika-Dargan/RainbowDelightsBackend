@@ -7,7 +7,6 @@ const getproduct = async (_, res) => {
         res.status(200).send(product)
         // res.status(200).json(products);
     } catch (error) {
-    
         res.status(404).json({error:"Error retrieving product"});
     }
 }
@@ -28,13 +27,14 @@ console.error("Error retrieving product", error);
 }
 
 const addproduct = async (req, res) => {
-    const { name, netQuantity,
+    const { name, 
+        netQuantity,
         price,
         weight,
         category,
         image,
         ingredients,
-        description,} = req.body;
+        description} = req.body;
     try {
         const product=await Product.create({
             name,
@@ -116,7 +116,6 @@ const deleteproduct = async (req, res) => {
 // user customization products of base flavour
 const getBaseFlavour = async (_,res)=>{
     try{
-        console.log("\n\n","dkdfffj","\n\n\n")
         const flavour = await BaseFlavour.findAll()
         res.status(200).send(flavour)
     }catch(error){

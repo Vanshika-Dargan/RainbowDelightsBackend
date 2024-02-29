@@ -9,7 +9,7 @@ module.exports= (sequelize,DataTypes)=>{
             type:DataTypes.STRING,
             allowNull:false
           },
-          netQuantity:{
+          quantityPerBox:{
             type:DataTypes.INTEGER,
             allowNull:false
           },
@@ -29,6 +29,10 @@ module.exports= (sequelize,DataTypes)=>{
           image:{
             type:DataTypes.TEXT,
             allowNull:false,
+          },
+          costPerQuantity:{
+            type:DataTypes.INTEGER,
+            allowNull:true
           },
           ingredients:{
             type:DataTypes.ARRAY(DataTypes.STRING),

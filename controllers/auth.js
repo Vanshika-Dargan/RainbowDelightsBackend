@@ -6,8 +6,8 @@ const {promisify} = require("util");
 
 const login = async (req, res) => {
   try {
-    const { userName, password } = req.body;
-    if (!userName) {
+    const { email, password } = req.body;
+    if (!email) {
       return res.status(400).json({
         message: "Username is required"
       });
@@ -20,7 +20,7 @@ const login = async (req, res) => {
 
     const user = await User.findOne({
       where: {
-        userName,
+        email,
       },
       attributes: ['id', 'userName', 'password'],
     });
@@ -50,7 +50,7 @@ const login = async (req, res) => {
         message: "Login successful",
         data: {
           userId: user.id,
-          username: user.username,
+          userName: user.userName,
         }
       });
     }
@@ -68,8 +68,8 @@ const login = async (req, res) => {
 
 const signup = async (req, res) => {
   try {
-    const { userName, password, name } = req.body;
-    if (!userName || !password || !name) {
+    const { userName, password, email } = req.body;
+    if (!userName || !password || !email) {
       return res.status(400).json({
         message: "Username, password, and name are required"
       });
@@ -80,7 +80,7 @@ const signup = async (req, res) => {
     const user = await User.create({
       userName,
       password: hashPassword,
-      name,
+      email,
     });
 
     return res.status(200).json({
@@ -88,7 +88,7 @@ const signup = async (req, res) => {
       data: {
         userId: user.id,
         userName: user.userName,
-        name: user.name,
+        email: user.email,
       }
     });
 

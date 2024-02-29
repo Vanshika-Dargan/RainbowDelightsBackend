@@ -107,7 +107,7 @@ const getMessage= (req, res) => {
     Message.findAll({
         where: {
             operator: operator,
-            username: userName
+            userName: userName
         }
     })
         .then((result) => {
@@ -148,9 +148,9 @@ const sendMessage= (req,res)=>{
     const { userName, operator, userType, message } = req.body;
     // Now you can access username, operator, user_type, and message here
     Message.create({
-        username:userName,
+        userName:userName,
         operator:operator,
-        user_type:userType,
+        userType:userType,
         message:message
     }).catch((err)=>{
         console.log(err);

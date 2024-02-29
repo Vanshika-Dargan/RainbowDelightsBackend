@@ -1,6 +1,6 @@
 module.exports= (sequelize,DataTypes)=>{
     const QueueSystem= sequelize.define("QueueSystem",{
-        username:{
+        userName:{
             type : DataTypes.STRING
         }
 
