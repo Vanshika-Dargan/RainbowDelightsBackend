@@ -28,10 +28,11 @@ const getproductbyid = async (req, res) => {
 
 const addproduct = async (req, res) => {
     const { name, 
-        netQuantity,
+        quantityPerBox,
         price,
         weight,
         category,
+        
         description, } = req.body;
     let newPath = null;
     console.log(req.file);
@@ -45,7 +46,7 @@ const addproduct = async (req, res) => {
     try {
         const product = await Product.create({
             name,
-            netQuantity,
+            quantityPerBox,
             price,
             weight,
             category,

@@ -30,10 +30,10 @@ module.exports= (sequelize,DataTypes)=>{
             type:DataTypes.TEXT,
             allowNull:false,
           },
-          costPerQuantity:{
-            type:DataTypes.INTEGER,
-            allowNull:true
-          },
+          // costPerQuantity:{
+          //   type:DataTypes.INTEGER,
+          //   allowNull:true
+          // },
           ingredients:{
             type:DataTypes.ARRAY(DataTypes.STRING),
             allowNull:true
