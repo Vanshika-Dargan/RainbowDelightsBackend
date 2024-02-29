@@ -6,18 +6,29 @@ const db = require('./models');
 const cors = require('cors');
 const { config } = require('dotenv');
 config();
+const bodyParser = require('body-parser');
+const multer = require('multer');
+const uploadMiddleWare = multer({ dest: 'uploads/' });
+
+module.exports.uploadMiddleWare= uploadMiddleWare;
 
 const app=express();
 const PORT=process.env.PORT || 3000;
 app.use(express.json());
 app.use(cors())
+app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use('/api', authRouter);
-app.use('/product',productRoutes);
+app.use('/product',uploadMiddleWare.single('image'),productRoutes);
 app.use('/chat',chatRoutes);
 
 
-app.listen(PORT,async()=>{
+app.get('/', (req, res) => {
+    res.send("Welcome to Home Page");
+});
+
+
+app.listen(5000, async () => {
     console.log(`Server running on Port ${PORT}`);
     db.sequelize.sync({ alter: true }).then(()=>{
         console.log("Database is connected.")
