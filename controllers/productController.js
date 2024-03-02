@@ -7,7 +7,7 @@ const getproduct = async (_, res) => {
         res.status(200).send(product)
         // res.status(200).json(products);
     } catch (error) {
-        res.status(404).json({error:"Error retrieving product"});
+        res.status(404).json({ error: "Error retrieving product" });
     }
 }
 
@@ -22,12 +22,12 @@ const getproductbyid = async (req, res) => {
         }
     } catch (error) {
         console.error("Error retrieving product", error);
-        res.status(404).json({error:"Error retrieving product"});
+        res.status(404).json({ error: "Error retrieving product" });
     }
 }
 
 const addproduct = async (req, res) => {
-    const { name, 
+    const { name,
         quantityPerBox,
         price,
         weight,
@@ -65,25 +65,37 @@ const addproduct = async (req, res) => {
 const updateproduct = async (req, res) => {
     const id = req.params.id;
     const { name,
-        netQuantity,
+        quantityPerBox,
         price,
         weight,
         category,
-        image,
+        ingredients,
         description } = req.body;
+    let newPath = "";
+    console.log(req.file);
+    if (req.file) {
+        const { originalname, path } = req.file;
+        const parts = originalname.split('.');
+        const ext = parts[parts.length - 1];
+        newPath = path + '.' + ext;
+        fs.renameSync(path, newPath);
+    }
+
     try {
         const product = await Product.findByPk(id);
         if (!product) {
             res.status(404).json({ message: "Product not found" });
         } else {
             await Product.update({
+                ...product,
                 name,
-                netQuantity,
+                quantityPerBox,
                 price,
                 weight,
                 category,
-                image,
-                description
+                ingredients,
+                description,
+                image: newPath == '' ? product.image : newPath
             }, {
                 where: {
                     id
@@ -126,8 +138,8 @@ const getBaseFlavour = async (_, res) => {
     try {
         const flavour = await BaseFlavour.findAll()
         res.status(200).send(flavour)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving base flavour."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving base flavour." });
     }
 }
 
@@ -199,8 +211,8 @@ const getTopping = async (_, res) => {
     try {
         const topping = await Topping.findAll()
         res.status(200).send(topping)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving topping."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving topping." });
     }
 }
 
@@ -272,23 +284,23 @@ const getWeight = async (_, res) => {
     try {
         const weight = await Weight.findAll()
         res.status(200).send(weight)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving weight"});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving weight" });
     }
 }
 
-const addWeight = async (req,res)=>{
-    try{
-        const {size, price } = req.body
+const addWeight = async (req, res) => {
+    try {
+        const { size, price } = req.body
 
-        if(!size || !price){
+        if (!size || !price) {
             res.status(400).json({
                 message: "name and price are required"
             });
         }
 
-        const weight = await Weight.create({size,price, image})
-        res.status(201).json({ weight,message: "Weight is added successfully in database",success:true });
+        const weight = await Weight.create({ size, price, image })
+        res.status(201).json({ weight, message: "Weight is added successfully in database", success: true });
 
     } catch (error) {
         res.status(400).json({ error: "Error inserting base weight" });
@@ -344,8 +356,8 @@ const getDecoration = async (_, res) => {
     try {
         const decoration = await Decoration.findAll()
         res.status(200).send(decoration)
-    }catch(error){
-        res.status(404).json({error:"Error retrieving decoration."});
+    } catch (error) {
+        res.status(404).json({ error: "Error retrieving decoration." });
     }
 }
 
