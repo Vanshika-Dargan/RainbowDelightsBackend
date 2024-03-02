@@ -42,10 +42,14 @@ const login = async (req, res) => {
 
       const options = {
         expires : new Date(Date.now()+process.env.JWT_COOKIE_EXPIRY_DAY * 24*60*60*1000),
+        path: '/',
+        secure:"true",
+        sameSite: 'None',
         httpOnly:true
       }
 
       res.cookie("jwt",token,options)
+      // console.log("ghjk",res)
       return res.status(200).json({
         message: "Login successful",
         data: {
@@ -118,8 +122,9 @@ const logout = async(_,res) => {
 };
 
 const protection = async(req, res,next) => {
+  const token = (req.cookies.jwt);
+  console.log("dinesh",token)
   try{
-    const token = (req.headers.cookie).split('=')[1];
 
     if (!token) {
       return res.status(400).json({
