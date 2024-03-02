@@ -9,13 +9,19 @@ config();
 const bodyParser = require('body-parser');
 const multer = require('multer');
 const uploadMiddleWare = multer({ dest: 'uploads/' });
+const cookieParser = require('cookie-parser');
+
 
 module.exports.uploadMiddleWare= uploadMiddleWare;
 
 const app=express();
 const PORT=process.env.PORT || 3000;
 app.use(express.json());
-app.use(cors())
+app.use(cookieParser());
+app.use(cors({
+    origin: 'http://127.0.0.1:5173',
+    credentials: true,
+  }))
 app.use('/uploads', express.static(__dirname + '/uploads'));
 
 app.use('/api', authRouter);
