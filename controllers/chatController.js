@@ -6,7 +6,6 @@ const searchConnection =  async (req, res) => {
     const operatorName = req.params.operatorName;
     UserClientConnection.findAll({where : {operator : operatorName}}).then((result)=>{
         res.json(result[0]["userName"]);
-        console.log("running...");
     }).catch((err) =>{
         console.log(err);
     })
@@ -123,7 +122,6 @@ const getMessage= (req, res) => {
 
 const addtoqueue= (req,res)=>{
     const { userName }=req.params;
-    console.log(userName);
     QueueSystem.create({
         userName : userName
     }).catch((err)=>{

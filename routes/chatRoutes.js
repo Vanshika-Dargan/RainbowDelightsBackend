@@ -6,36 +6,36 @@ const {searchConnection,closeConversation,getClient,queueCount,getClientCount,se
 
 
 
-route.get("/api/search_connection/:operatorName", searchConnection);
+route.get("/search_connection/:operatorName", searchConnection);
 
-route.get("/api/close_conversation/:operatorName",closeConversation);
-
-
-route.get("/api/get_client/:operatorName", getClient);
+route.get("/close_conversation/:operatorName",closeConversation);
 
 
-
-
-route.get("/api/queue_count/:userName", queueCount);
-
-route.get("/api/get_client_count", getClientCount);
-
-
-route.get("/api/search_operator/:userName",searchOperator)
-
-
-route.get('/api/get_messages/:userName/:operator', getMessage);
+route.get("/get_client/:operatorName", getClient);
 
 
 
 
-route.get('/api/addtoqueue/:userName',addtoqueue)
+route.get("/queue_count/:userName", queueCount);
+
+route.get("/get_client_count", getClientCount);
 
 
-route.get('/api/checkqueue/:userName',checkqueue)
+route.get("/search_operator/:userName",searchOperator)
 
 
-route.post("/api/send_message",sendMessage)
+route.get('/get_messages/:userName/:operator', getMessage);
+
+
+
+
+route.get('/addtoqueue/:userName',addtoqueue)
+
+
+route.get('/checkqueue/:userName',checkqueue)
+
+
+route.post("/send_message",sendMessage)
 
 
 module.exports = route;
