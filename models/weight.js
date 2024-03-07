@@ -7,7 +7,7 @@ module.exports= (sequelize,DataTypes)=>{
             primaryKey:true
           },
           size:{
-            type:DataTypes.STRING,
+            type:DataTypes.FLOAT,
             allowNull:false
           },
           price:{

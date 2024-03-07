@@ -192,7 +192,7 @@ const updateBaseFlavour = async (req, res) => {
 const deleteBaseFlavour = async (req, res) => {
     const id = req.params.id;
     try {
-        const flavour = await baseFlavour.findByPk(id);
+        const flavour = await BaseFlavour.findByPk(id);
         if (!flavour) {
             res.status(404).json({ message: "Base flavour not found" });
         } else {
@@ -299,7 +299,7 @@ const addWeight = async (req, res) => {
             });
         }
 
-        const weight = await Weight.create({ size, price, image })
+        const weight = await Weight.create({ size, price})
         res.status(201).json({ weight, message: "Weight is added successfully in database", success: true });
 
     } catch (error) {

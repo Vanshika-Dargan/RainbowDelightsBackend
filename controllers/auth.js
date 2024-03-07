@@ -123,7 +123,6 @@ const logout = async(_,res) => {
 
 const protection = async(req, res,next) => {
   const token = (req.cookies.jwt);
-  console.log("dinesh",token)
   try{
 
     if (!token) {
