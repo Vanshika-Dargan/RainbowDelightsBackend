@@ -15,7 +15,8 @@ const getCart = async (req,res)=>{
             dataValues.quantity = element.quantity;
             dataSet.push(dataValues);
         }
-        res.status(200).send(dataSet)
+        const count = await Cart.count({where:{userId}});
+        res.status(200).send({dataSet,count})
     }catch(err){
         res.status(404).json({ error: "Error retrieving data" });
     }
@@ -32,14 +33,15 @@ const addCart = async (req,res)=>{
     const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
     try{
         const result = await Cart.create({productId,userId,quantity})
-        res.status(201).json({ product: result, message: "Product added successfully in database", success: true });
+        const count = await Cart.count({where:{userId}});
+        res.status(201).json({ product: result, message: "Product added successfully in database", success: true ,count});
     }catch(err){
         res.status(400).json({ error: "Error inserting data" });
     }
 }
  
 const deleteCart = async (req,res) =>{
-    const {productId} = req.body;
+    const {productId } = req.query;
     const token = (req.cookies.jwt);
 
     const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
@@ -53,9 +55,11 @@ const deleteCart = async (req,res) =>{
                 productId,userId
             }
         });
+        const Count = await Cart.count({where:{userId}});
         console.log("Product deleted successfully");
-        res.status(200).json({ message: "Product deleted successfully", success: true });
+        res.status(200).json({ message: "Product deleted successfully", success: true,count:Count });
     }    
 }
+
 
 module.exports = {getCart,addCart,deleteCart}

@@ -1,5 +1,7 @@
 const { Product, BaseFlavour, Topping, Weight, Decoration } = require("../models")
 const fs = require('node:fs');
+const { Sequelize, Op } = require('sequelize');
+
 // fixed products
 const getproduct = async (_, res) => {
     try {
@@ -131,6 +133,29 @@ const deleteproduct = async (req, res) => {
         res.status(404).json({ error: "Error deleting product" });
     }
 }
+
+const productSearch = async (req, res) => {
+    const searchKey  = req.params.id;
+  
+    if (!searchKey) {
+      return res.status(400).send({ message: 'Please provide a search query' });
+    }
+  
+    try {
+      const users = await Product.findAll({
+        where: {
+          name: {
+            // Use the Sequelize operator for case-insensitive search (e.g., LIKE '%query%')
+            [Op.iLike]: `%${searchKey}%`,
+          },
+        },
+      });
+      return res.send(users);
+    } catch (error) {
+      console.error('Search error:', error);
+      return res.status(500).send({ message: 'Error fetching users' });
+    }
+};
 
 
 // user customization products of base flavour
@@ -429,6 +454,7 @@ module.exports = {
     addproduct,
     updateproduct,
     deleteproduct,
+    productSearch,
     getBaseFlavour,
     addBaseFlavour,
     updateBaseFlavour,

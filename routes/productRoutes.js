@@ -1,5 +1,5 @@
 const express = require("express");
-const { getproduct, getproductbyid, addproduct, updateproduct, deleteproduct, 
+const { getproduct, getproductbyid, addproduct, updateproduct, deleteproduct, productSearch, 
     addBaseFlavour, addDecoration, addTopping, addWeight,
     getBaseFlavour,getDecoration,getTopping, getWeight } 
     = require("../controllers/productController.js");
@@ -13,6 +13,8 @@ route.use(bodyParser.urlencoded({ extended: true }));
 route.use(bodyParser.json());
 
 route.get("/products", getproduct);
+
+route.get("/productsSearch/:id", productSearch);
 
 route.get("/products/:id", getproductbyid);
 
