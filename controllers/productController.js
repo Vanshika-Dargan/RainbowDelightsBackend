@@ -6,6 +6,14 @@ const { Sequelize, Op } = require('sequelize');
 const getproduct = async (_, res) => {
     try {
         const product = await Product.findAll();
+
+        const path = "http://localhost:5000/"
+        let result = []
+        product.forEach((items)=>{
+            items.image = path+items.image.split("\\")[0]+"/"+items.image.split("\\")[1]
+            result = [items,...result]
+        })
+        // console.log("ghj",product[0].image)
         res.status(200).send(product)
         // res.status(200).json(products);
     } catch (error) {
@@ -150,7 +158,14 @@ const productSearch = async (req, res) => {
           },
         },
       });
-      return res.send(users);
+
+        const path = "http://localhost:5000/"
+        let result = []
+        users.forEach((items)=>{
+            items.image = path+items.image.split("\\")[0]+"/"+items.image.split("\\")[1]
+            result = [items,...result]
+        })
+      return res.send(result);
     } catch (error) {
       console.error('Search error:', error);
       return res.status(500).send({ message: 'Error fetching users' });

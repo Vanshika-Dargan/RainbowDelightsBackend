@@ -55,6 +55,7 @@ const login = async (req, res) => {
         data: {
           userId: user.id,
           userName: user.userName,
+          token
         }
       });
     }
@@ -105,26 +106,25 @@ const signup = async (req, res) => {
 
 const logout = async(_,res) => {
   try{
-    const options = {
-        expires : new Date(
-            Date.now()+process.env.JWT_COOKIE_EXPIRY_DAY * 24 *60*60*1000
-        ),
+      const options = {
+        expires : new Date(Date.now()+process.env.JWT_COOKIE_EXPIRY_DAY * 24*60*60*1000),
+        path: '/',
+        secure:"true",
+        sameSite: 'None',
         httpOnly:true
+      }
+      res.cookie("jwt","",options)  
+      res.status(200).send("successfully loged out")
+    }catch(error){
+      return res.status(500).json({
+        message: error.message
+      });
     }
-    
-    res.cookie("jwt","",options)  
-    res.status(200).send("successfully loged out")
-  }catch(error){
-    return res.status(500).json({
-      message: error.message
-    });
-  }
-};
-
+  };
+  
 const protection = async(req, res,next) => {
   const token = (req.cookies.jwt);
   try{
-
     if (!token) {
       return res.status(400).json({
         message: "You have being logged out."
@@ -149,4 +149,29 @@ const protection = async(req, res,next) => {
   }
 }
 
-module.exports = {login, signup, logout, protection}
+const adminProtection = async(req,res) =>{
+  const token = (req.cookies.jwt);
+    try{
+      if (!token) {
+        return res.status(400).json({
+          message: "You have being logged out."
+        });
+      }
+
+      const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
+
+      const user = await User.findOne({where:{id:userId,userType:"admin"}})
+    
+      if (!user) {
+        return res.send({status:false})
+      }
+      res.send({userName:user.userName,status:true})
+    }catch(error){
+      return res.status(500).json({
+        message: error.message
+      });
+    }
+}
+
+
+module.exports = {login, signup, logout, protection, adminProtection}

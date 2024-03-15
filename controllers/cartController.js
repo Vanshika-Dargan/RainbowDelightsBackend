@@ -7,14 +7,29 @@ const getCart = async (req,res)=>{
 
     const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
 
-    const dataSet = []
+    let data = []
     try{
         const result = await Cart.findAll({where:{userId}})
-        for (const element of result) {
-            let { dataValues } = await Product.findOne({where:{id:element.productId}});
-            dataValues.quantity = element.quantity;
-            dataSet.push(dataValues);
+
+        async function update(results) {
+            for (const element of results) {
+                let {dataValues} = await Product.findOne({ where: { id: element.productId } });
+                dataValues.quantity = element.quantity;
+                data = [...data,dataValues];
+            } 
         }
+        await update(result)
+        // result.forEach(async(element)=>{
+            //     let dataValues = await Product.findOne({where:{id:element.productId}});
+            //     dataValues.dataValues.quantity = element.quantity;
+            //     data.push(dataValues.dataValues);
+        // })
+        const path = "http://localhost:5000/"
+        let dataSet = []
+        data.forEach((items)=>{
+            items.image = path+items.image.split("\\")[0]+"/"+items.image.split("\\")[1]
+            dataSet = [items,...dataSet]
+        })
         const count = await Cart.count({where:{userId}});
         res.status(200).send({dataSet,count})
     }catch(err){
@@ -61,5 +76,15 @@ const deleteCart = async (req,res) =>{
     }    
 }
 
+const countCart = async(req,res)=>{
+    const token = (req.cookies.jwt);
+    try{
+        const {userId} = await promisify(jwt.verify)(token,process.env.JWT_SECRET_KEY)
+        const count = await Cart.count({where:{userId}});
+        res.status(200).send({count})
+    }catch(err){
+        res.status(404).send(err.msg)
+    }
+}
 
-module.exports = {getCart,addCart,deleteCart}
+module.exports = {getCart,addCart,deleteCart,countCart}
